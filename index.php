@@ -67,9 +67,9 @@
                         <!-- ?= est forme courte pour "echo" -->
                             <tr>
                                 <td><?= $produit["id"] ?></td>
-                                <td><?= $produit["id"] ?></td>
-                                <td><?= $produit["id"] ?></td>
-                                <td><?= $produit["id"] ?></td>
+                                <td><?= $produit["produit"] ?></td>
+                                <td><?= $produit["prix"] ?></td>
+                                <td><?= $produit["nombre"] ?></td>
                                 <td><a href="details.php?id=<?= $produit['id'] ?>">Voir les détails</a></td>
                             </tr>
                         <?php
