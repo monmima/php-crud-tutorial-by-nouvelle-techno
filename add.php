@@ -3,24 +3,46 @@
     // Permet d'utiliser la superglobale $_SESSION; permet de partager une variable entre fichiers PHP
     session_start();
 
-    // On inclut la connexion à la base
-    require_once("connect.php");
+    // $_POST signifie que des informations sont envoyées par le formulaire
 
-    $sql = "SELECT * FROM `data_tb`";
+    if($_POST) {
+        // on vérifie qu'il est défini et pas vide
+        if (isset($_POST['produit']) && !empty($_POST['produit'])
+        && isset($_POST['prix']) && !empty($_POST['prix'])
+        && isset($_POST['nombre']) && !empty($_POST['nombre'])) {
 
-    // On prépare la requête
-    $query = $db->prepare($sql);
+            // On inclut la connexion à la base
+            require_once("connect.php");
 
-    // On exécute la requête
-    $query->execute();
+            // On nettoie les données envoyées
+            $produit = strip_tags($_POST["produit"]);
+            $prix = strip_tags($_POST["prix"]);
+            $nombre = strip_tags($_POST["nombre"]);
 
-    // On stocke le résultat dans un tableau associatif
-    // Pour ne pas avoir la totalité des résultats en double
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            $sql = "INSERT INTO `liste` (`produit`, `prix`, `nombre`) VALUES (:produit, :prix, :nombre);";
 
-    // var_dump($result);
+            $query = $db->prepare($sql);
 
-    require("close.php");
+            $query->bindValue(':produit', $produit, PDO::PARAM_STR);
+            $query->bindValue(':prix', $prix, PDO::PARAM_STR);
+            $query->bindValue(':nombre', $nombre, PDO::PARAM_INT);
+
+            $query->execute();
+
+            $_SESSION["message"] = "Produit ajouté";
+
+            require("close.php");
+
+            // redirection vers la page d'accueil
+            header("Location: index.php");
+
+
+        } else {
+            $_SESSION["erreur"] = "Le formulaire est incomplet"; 
+        }
+    }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +50,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des produits</title>
+    <title>Ajouter un produit</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -37,47 +59,40 @@
         <div class="row">
             <section class="col-12">
 
-            <?php
-                if (!empty($_SESSION["erreur"])) {
+                <?php
+                    if (!empty($_SESSION["erreur"])) {
 
-                echo '<div class="alert alert-danger" role="alert">
-                    '. $_SESSION["erreur"] .'
-                </div>';
-                $_SESSION["erreur"] = "";
+                        echo '<div class="alert alert-danger" role="alert">
+                            '. $_SESSION["erreur"] .'
+                        </div>';
+                        $_SESSION["erreur"] = "";
 
-                }
+                    }
+                ?>
 
-                $_SESSION["erreur"] = "";
-            ?>
+                <h1>Ajouter un produit</h1>
+ 
+                <!-- Si on ne met pas d'action, c'est la page elle-même qui va être chargée -->
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="produit">Produit</label>
+                        <input type="text" name="produit" id="produit" class="form-control">
+                    </div>
 
-                <h1>Liste des produits</h1>
-                <table class="table">
-                    <thead>
-                        <th>ID</th>
-                        <th>Produit</th>
-                        <th>Prix</th>
-                        <th>Nombre</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <?php
-                            // On boucle sur la variable result
-                            foreach($result as $produit) {
-                        ?>
-                        <!-- ?= est forme courte pour "echo" -->
-                            <tr>
-                                <td><?= $produit["id"] ?></td>
-                                <td><?= $produit["produit"] ?></td>
-                                <td><?= $produit["prix"] ?></td>
-                                <td><?= $produit["nombre"] ?></td>
-                                <td><a href="details.php?id=<?= $produit['id'] ?>">Voir les détails</a></td>
-                            </tr>
-                        <?php
-                            }
-                        ?>
-                    </tbody>
-                </table>
-                <a href="add.php" title="Ajouter un produit" class="btn btn-primary">Ajouter un produit</a>
+                    <div class="form-group">
+                        <label for="prix">Prix</label>
+                        <input type="text" name="prix" id="prix" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="number" name="nombre" id="nombre" class="form-control">
+                    </div>
+
+                    <button class="btn btn-primary">Envoyer</button>
+
+                </form>
+
             </section>
         </div>
     </main>
