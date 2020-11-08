@@ -19,7 +19,7 @@
             $prix = strip_tags($_POST["prix"]);
             $nombre = strip_tags($_POST["nombre"]);
 
-            $sql = "INSERT INTO `liste` (`produit`, `prix`, `nombre`) VALUES (:produit, :prix, :nombre);";
+            $sql = "INSERT INTO `data_tb` (`produit`, `prix`, `nombre`) VALUES (:produit, :prix, :nombre);";
 
             $query = $db->prepare($sql);
 
