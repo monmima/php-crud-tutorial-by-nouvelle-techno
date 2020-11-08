@@ -53,6 +53,14 @@
         <div class="row">
             <section class="col-12">
                 <h1>Détails du produit <?= $produit["produit"] ?></h1>
+                <p>ID&nbsp;: <?= $produit["id"] ?></p>
+                <p>Produit&nbsp;: <?= $produit["produit"] ?></p>
+                <p>Prix&nbsp;: <?= $produit["prix"] ?></p>
+                <p>Nombre&nbsp;: <?= $produit["nombre"] ?></p>
+                <p>
+                    <a href="index.php" title="Retour vers l'index">Retour</a>
+                    <a href="edit.php?:id=<?= $produit["id"] ?>" title="Modifier l'entrée">Modifier</a>
+                </p>
             </section>
         </div>
     </main>
