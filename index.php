@@ -79,9 +79,13 @@
                             <tr>
                                 <td><?= $produit["id"] ?></td>
                                 <td><?= $produit["produit"] ?></td>
-                                <td><?= $produit["prix"] ?></td>
+                                <td><?= $produit["prix"] ?>&nbsp;$</td>
                                 <td><?= $produit["nombre"] ?></td>
-                                <td><a href="details.php?id=<?= $produit['id'] ?>">Voir les détails</a></td>
+                                <td>
+                                    <a href="details.php?id=<?= $produit['id'] ?>">Voir</a>
+                                    <a href="edit.php?id=<?= $produit['id'] ?>">Modifier</a>
+                                    <a href="delete.php?id=<?= $produit['id'] ?>">Supprimer</a>
+                                </td>
                             </tr>
                         <?php
                             }
